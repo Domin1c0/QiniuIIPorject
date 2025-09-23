@@ -9,6 +9,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strings"
+
+	"github.com/tmaxmax/go-sse"
 )
 
 const (
@@ -79,23 +81,36 @@ func (x *Client) Predict(apiName string) (string, error) {
 	return bodyPredict.EventID, nil
 }
 
-func (x *Client) Result() (string, error) {
+func (x *Client) Result() ([]any, error) {
 	req, err := http.NewRequest("GET", x.BaseUrl+urlPredict+x.apiName+"/"+x.eventID, nil)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
+	for ev, err := range sse.Read(resp.Body, nil) {
+		if err != nil {
+			return nil, err
+		}
+		switch ev.Type {
+		case "complete":
+			res := make([]any, 0)
+			if err := json.Unmarshal([]byte(ev.Data), &res); err != nil {
+				return nil, err
+			}
+			return res, nil
+		case "error":
+			return nil, errors.New(ev.Data)
+		case "generating":
+		case "heartbeat":
+		}
 	}
-	return string(body), nil
+	return nil, errors.New("should not happen")
 }
 
 func (x *Client) AppendString(s string) {
