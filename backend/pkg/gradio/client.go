@@ -31,6 +31,8 @@ func generateUploadId() string {
 type Client struct {
 	BaseUrl string
 	data    []any
+	apiName string
+	eventID string
 }
 
 func NewClient(baseUrl string) *Client {
@@ -41,6 +43,7 @@ func NewClient(baseUrl string) *Client {
 }
 
 func (x *Client) Predict(apiName string) (string, error) {
+	x.apiName = apiName
 	reqBody := &bodyPredict{
 		Data: x.data,
 	}
@@ -72,7 +75,27 @@ func (x *Client) Predict(apiName string) (string, error) {
 		return "", err
 	}
 
+	x.eventID = bodyPredict.EventID
 	return bodyPredict.EventID, nil
+}
+
+func (x *Client) Result() (string, error) {
+	req, err := http.NewRequest("GET", x.BaseUrl+urlPredict+x.apiName+"/"+x.eventID, nil)
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	return string(body), nil
 }
 
 func (x *Client) AppendString(s string) {

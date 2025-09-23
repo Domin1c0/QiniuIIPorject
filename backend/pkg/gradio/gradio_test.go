@@ -21,4 +21,10 @@ func TestClient_Predict(t *testing.T) {
 	}
 
 	fmt.Println("eventID: ", eventID)
+
+	result, err := client.Result()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("result: ", result)
 }
