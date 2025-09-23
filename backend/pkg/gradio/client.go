@@ -8,7 +8,6 @@ import (
 	"math/rand"
 	"mime/multipart"
 	"net/http"
-	"strings"
 
 	"github.com/tmaxmax/go-sse"
 )
@@ -126,8 +125,11 @@ func (x *Client) UploadFile(filename string, file []byte, mimeType string) error
 	return nil
 }
 
-func (x *Client) UploadFileFromURL(s string) bool {
-	return strings.HasPrefix(s, "http://") || strings.HasPrefix(s, "https://")
+func (x *Client) UploadFileFromURL(s string) error {
+	x.data = append(x.data, &dataFile{
+		Path: s,
+	})
+	return nil
 }
 
 func (x *Client) uploadFile(filename string, file []byte) (string, error) {
