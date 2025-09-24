@@ -34,6 +34,7 @@ type Client struct {
 	data    []any
 	apiName string
 	eventID string
+	hfToken string
 }
 
 func NewClient(baseUrl string) *Client {
@@ -41,6 +42,10 @@ func NewClient(baseUrl string) *Client {
 		BaseUrl: baseUrl,
 		data:    make([]any, 0),
 	}
+}
+
+func (x *Client) SetHFToken(hfToken string) {
+	x.hfToken = hfToken
 }
 
 func (x *Client) Predict(apiName string) (string, error) {
@@ -58,6 +63,9 @@ func (x *Client) Predict(apiName string) (string, error) {
 		return "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	if x.hfToken != "" {
+		req.Header.Set("Authorization", "Bearer "+x.hfToken)
+	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -84,6 +92,9 @@ func (x *Client) Result() ([]any, error) {
 	req, err := http.NewRequest("GET", x.BaseUrl+urlPredict+x.apiName+"/"+x.eventID, nil)
 	if err != nil {
 		return nil, err
+	}
+	if x.hfToken != "" {
+		req.Header.Set("Authorization", "Bearer "+x.hfToken)
 	}
 
 	resp, err := http.DefaultClient.Do(req)
@@ -173,7 +184,14 @@ func (x *Client) uploadFile(filename string, file []byte) (string, error) {
 }
 
 func (x *Client) DownloadFile(path string) ([]byte, error) {
-	resp, err := http.Get(x.BaseUrl + urlFile + "=" + path)
+	req, err := http.NewRequest("GET", x.BaseUrl+urlFile+"="+path, nil)
+	if err != nil {
+		return nil, err
+	}
+	if x.hfToken != "" {
+		req.Header.Set("Authorization", "Bearer "+x.hfToken)
+	}
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -210,6 +228,9 @@ func (x *Client) createUploadRequest(filename string, file []byte) (*http.Reques
 		return nil, err
 	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
+	if x.hfToken != "" {
+		req.Header.Set("Authorization", "Bearer "+x.hfToken)
+	}
 
 	// set params
 	params := req.URL.Query()
