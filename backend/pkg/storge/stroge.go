@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	_ "modernc.org/sqlite"
 	"xorm.io/xorm"
 )
 

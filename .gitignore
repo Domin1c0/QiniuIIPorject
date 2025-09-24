@@ -1,2 +1,3 @@
 backend/config/config.yaml
-build/*
+backend/build/*
+*.db

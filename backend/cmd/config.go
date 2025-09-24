@@ -8,6 +8,7 @@ import (
 
 var defaultConfig = Config{
 	Domain: "example.com",
+	Port:   20722,
 	Log: ConfigLog{
 		Level:  "info",
 		Pretty: true,
@@ -20,6 +21,7 @@ var defaultConfig = Config{
 
 type Config struct {
 	Domain   string         `yaml:"domain"`
+	Port     int            `yaml:"port"`
 	Log      ConfigLog      `yaml:"log"`
 	Database ConfigDatabase `yaml:"database"`
 }

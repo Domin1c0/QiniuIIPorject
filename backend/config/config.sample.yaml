@@ -1,6 +1,7 @@
 # config.sample.yaml
 
 domain: example.com
+port: 20722
 
 log:
   level: debug
