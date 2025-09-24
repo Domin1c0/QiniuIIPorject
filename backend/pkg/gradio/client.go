@@ -116,6 +116,18 @@ func (x *Client) AppendString(s string) {
 	x.data = append(x.data, s)
 }
 
+func (x *Client) AppendBool(b bool) {
+	x.data = append(x.data, b)
+}
+
+func (x *Client) AppendInt(n int) {
+	x.data = append(x.data, n)
+}
+
+func (x *Client) AppendFloat(n float64) {
+	x.data = append(x.data, n)
+}
+
 func (x *Client) UploadFile(filename string, file []byte, mimeType string) error {
 	path, err := x.uploadFile(filename, file)
 	if err != nil {
@@ -158,6 +170,20 @@ func (x *Client) uploadFile(filename string, file []byte) (string, error) {
 	}
 
 	return paths[0], nil
+}
+
+func (x *Client) DownloadFile(path string) ([]byte, error) {
+	resp, err := http.Get(x.BaseUrl + urlFile + "=" + path)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return body, nil
 }
 
 func (x *Client) createUploadRequest(filename string, file []byte) (*http.Request, error) {
