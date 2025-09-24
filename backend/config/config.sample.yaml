@@ -1,0 +1,16 @@
+# config.sample.yaml
+
+domain: example.com
+
+log:
+  level: debug
+  pretty: true
+
+# support postgresql, sqlite
+database:
+  # type: postgresql
+  # url: postgres://qiniuii:qiniuii@127.0.0.1/qiniuii
+
+  # sqlite
+  type: sqlite
+  url: ./build/qiniuii.db
