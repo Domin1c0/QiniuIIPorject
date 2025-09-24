@@ -7,7 +7,7 @@ import (
 )
 
 func TestClient_Predict(t *testing.T) {
-	file, err := os.ReadFile("wikipedia_ai.mp3")
+	file, err := os.ReadFile("../samples/wikipedia_ai.mp3")
 	if err != nil {
 		t.Fatal(err)
 	}
