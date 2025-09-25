@@ -54,7 +54,7 @@ func main() {
 	}
 
 	// serve http
-	server, err := web.NewServer(config.Domain, config.Port, database, ptr(log.With().Str("comp", "web").Logger()))
+	server, err := web.NewServer(config.Domain, config.Port, database, ptr(log.With().Str("comp", "web").Logger()), config.HFToken)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create web server")
 	}
