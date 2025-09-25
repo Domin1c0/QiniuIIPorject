@@ -1,25 +1,13 @@
-package api
+package llm
 
 import (
 	"context"
-	"errors"
 	"time"
 
 	storage "github.com/LTSlw/QiniuIIPorject/backend/pkg/storge"
 	"github.com/openai/openai-go/v2"
 	"github.com/openai/openai-go/v2/option"
 )
-
-var (
-	errInvalidRole = errors.New("invalid role in message")
-	errNoChoices   = errors.New("no choices returned from llm")
-)
-
-type Model struct {
-	Addr      string `json:"addr"`
-	ModelName string `json:"model_name"`
-	ApiKey    string `json:"api_key"`
-}
 
 func CallLLM(model Model, messages []storage.Message) (storage.Message, error) {
 	var res storage.Message
@@ -31,6 +19,8 @@ func CallLLM(model Model, messages []storage.Message) (storage.Message, error) {
 	// build messages
 	// this function builds all the messages to request from input
 	// assume that messages are selected from outside the function?
+
+	// TODO: the last message in messages should be user message
 	msgs := make([]openai.ChatCompletionMessageParamUnion, 0, len(messages))
 	for _, message := range messages {
 		switch message.Role {
@@ -63,7 +53,6 @@ func CallLLM(model Model, messages []storage.Message) (storage.Message, error) {
 	res.Content = chatCompletion.Choices[0].Message.Content
 	res.CreateAt = time.Unix(chatCompletion.Created, 0)
 	return res, nil
-
 	// return chatCompletion.Choices[0].Message.Content, nil
 
 }
