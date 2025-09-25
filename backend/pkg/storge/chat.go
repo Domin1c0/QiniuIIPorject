@@ -14,6 +14,6 @@ type Message struct {
 	Id         int    `xorm:"pk autoincr 'message_id'" json:"-"`
 	Role       string `xorm:"'role' not null" json:"role"`
 	Content    string `xorm:"'content' not null" json:"content"`
-	createAt   int64  `xorm:"'create_at' not null" json:"create_at"`
+	CreateAt   int64  `xorm:"'create_at' not null" json:"create_at"`
 	// TODO store message audio
 }
