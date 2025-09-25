@@ -12,7 +12,7 @@ func TestClient_Predict(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client := NewClient("https://openai-whisper.hf.space/gradio_api")
+	client := NewClient("openai/whisper")
 	client.UploadFile("wikipedia_ai.mp3", file, "audio/mpeg")
 	client.AppendString("transcribe")
 	eventID, err := client.Predict("predict")
@@ -27,4 +27,14 @@ func TestClient_Predict(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Println("result: ", result)
+}
+
+func TestClient_GetJWT(t *testing.T) {
+	client := NewClient("openai/whisper")
+	client.SetHFToken(os.Getenv("HF_TOKEN"))
+	jwt, err := client.getJWT()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("jwt: ", jwt)
 }
