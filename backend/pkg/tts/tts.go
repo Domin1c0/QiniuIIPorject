@@ -30,9 +30,14 @@ func TTS(text string, character string) ([]byte, error) {
 		return nil, err
 	}
 
-	path, ok := result[0].(string)
+	data, ok := result[0].(map[string]any)
 	if !ok {
 		return nil, errors.New("rate limited")
+	}
+
+	path, ok := data["path"].(string)
+	if !ok {
+		return nil, errors.New("path not found")
 	}
 
 	body, err := client.DownloadFile(path)
