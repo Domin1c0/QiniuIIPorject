@@ -6,12 +6,9 @@ import (
 	"github.com/LTSlw/QiniuIIPorject/backend/pkg/gradio"
 )
 
-const (
-	urlTTS = "https://yasserrmd-vibevoice.hf.space/gradio_api"
-)
-
-func TTS(text string, character string) ([]byte, error) {
-	client := gradio.NewClient(urlTTS)
+func TTS(text string, character string, hfToken string) ([]byte, error) {
+	client := gradio.NewClient("yasserrmd/vibevoice")
+	client.SetHFToken(hfToken)
 	client.AppendString("VibeVoice-Large")
 	client.AppendInt(1)
 	client.AppendString(text)

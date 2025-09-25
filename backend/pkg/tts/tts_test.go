@@ -3,6 +3,7 @@ package tts
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"testing"
 )
 
@@ -16,7 +17,7 @@ func TestGetCharacters(t *testing.T) {
 }
 
 func TestTTS(t *testing.T) {
-	audio, err := TTS(text, "zh-Xinran_woman")
+	audio, err := TTS(text, "zh-Xinran_woman", os.Getenv("HF_TOKEN"))
 	if err != nil {
 		t.Fatal(err)
 	}

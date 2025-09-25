@@ -2,8 +2,9 @@ package stt
 
 import "github.com/LTSlw/QiniuIIPorject/backend/pkg/gradio"
 
-func STT(audio []byte) (string, error) {
-	client := gradio.NewClient("https://openai-whisper.hf.space/gradio_api")
+func STT(audio []byte, hfToken string) (string, error) {
+	client := gradio.NewClient("openai/whisper")
+	client.SetHFToken(hfToken)
 	client.UploadFile("audio.mp3", audio, "audio/mpeg")
 	client.AppendString("transcribe")
 	_, err := client.Predict("predict")

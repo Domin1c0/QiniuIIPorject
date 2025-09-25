@@ -11,7 +11,7 @@ func TestSTT(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	result, err := STT(audio)
+	result, err := STT(audio, os.Getenv("HF_TOKEN"))
 	if err != nil {
 		t.Fatal(err)
 	}
