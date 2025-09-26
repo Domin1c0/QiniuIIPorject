@@ -1,3 +1,4 @@
 backend/config/config.yaml
 backend/build/*
 *.db
+*_manual_test.go
