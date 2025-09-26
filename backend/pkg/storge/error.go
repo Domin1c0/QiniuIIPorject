@@ -5,6 +5,6 @@ import (
 )
 
 var (
-	ErrSessionNotFound = errors.New("session not found")
-	ErrInvalidUserID   = errors.New("invalid user id")
+	ErrNotFound      = errors.New("resource not found")
+	ErrInvalidUserID = errors.New("invalid user id")
 )

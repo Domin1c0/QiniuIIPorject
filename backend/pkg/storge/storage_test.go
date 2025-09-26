@@ -52,9 +52,9 @@ func TestGet(t *testing.T) {
 	}
 
 	message := &Message{
-		Session_id: dbSession.Id,
-		Role:       "user",
-		Content:    "みんなー！ チルノのさんすう教室⑨周年だよ～！",
+		SessionId: dbSession.Id,
+		Role:      "user",
+		Content:   "みんなー！ チルノのさんすう教室⑨周年だよ～！",
 	}
 	dbMessage, err := store.AddMessage(*message)
 	if err != nil {

@@ -6,18 +6,25 @@ import (
 
 type Session struct {
 	UserId   int       `xorm:"'user_id'" json:"-"`
-	Id       int       `xorm:"pk autoincr 'session_id'" json:"-"`
+	Id       int       `xorm:"pk autoincr 'session_id'" json:"session_id"`
 	CreateAt time.Time `xorm:"'create_at' not null" json:"create_at"`
 	UpdateAt time.Time `xorm:"'update_at'" json:"update_at"`
+	// TODO add session name(auto generate or Use character name)
+	// TODO add character key
 }
 
 type Message struct {
-	Session_id int       `xorm:"session_id" json:"-"`
-	Id         int       `xorm:"pk autoincr 'message_id'" json:"-"`
-	Role       string    `xorm:"'role' not null" json:"role"`
-	Content    string    `xorm:"'content' not null" json:"content"`
-	CreateAt   time.Time `xorm:"'create_at' not null" json:"create_at"`
+	SessionId int       `xorm:"session_id" json:"-"`
+	Id        int       `xorm:"pk autoincr 'message_id'" json:"-"`
+	Role      string    `xorm:"'role' not null" json:"role"`
+	Content   string    `xorm:"'content' not null" json:"content"`
+	CreateAt  time.Time `xorm:"'create_at' not null" json:"create_at"`
 	// TODO store message audio
+}
+
+type SessionWithMessages struct {
+	Session
+	Messages []Message `json:"messages"`
 }
 
 // SELECT
@@ -72,7 +79,7 @@ func (db *Storage) GetSessionByID(sessionID int) (Session, error) {
 		return res, err
 	}
 	if !has {
-		return res, ErrSessionNotFound
+		return res, ErrNotFound
 	}
 	return res, nil
 }
@@ -115,7 +122,7 @@ func (db *Storage) AddMessage(message Message) (Message, error) {
 		return message, err
 	}
 	// update session update_at
-	_, err = db.engine.Where("session_id = ?", message.Session_id).Cols("update_at").Update(&Session{UpdateAt: time.Now()})
+	_, err = db.engine.Where("session_id = ?", message.SessionId).Cols("update_at").Update(&Session{UpdateAt: time.Now()})
 	if err != nil {
 		return message, err
 	}
