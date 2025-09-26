@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	storage "github.com/LTSlw/QiniuIIPorject/backend/pkg/storge"
+	"github.com/LTSlw/QiniuIIPorject/backend/pkg/web/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -41,10 +42,10 @@ func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Log
 	r := chi.NewRouter()
 	// // TODO: replave with cors.Handler
 	// r.Use(middleware.Logger(logger), middleware.WithHeaders, middleware.MaxBodyLength(maxBodySize))
-	// r.Mount("/_matrix", s.matrixRouters())
-	// r.Mount("/_hotaru", s.hotaruRouters())
+	r.Use(middleware.MaxBodyLength(maxBodySize))
 	r.Mount("/", s.basicRouters())
 
+	r.Mount("/chat", s.chatRouters())
 	s.http.Handler = r
 
 	return s, nil
