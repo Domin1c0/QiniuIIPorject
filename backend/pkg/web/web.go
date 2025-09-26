@@ -42,7 +42,7 @@ func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Log
 	r := chi.NewRouter()
 	// // TODO: replave with cors.Handler
 	// r.Use(middleware.Logger(logger), middleware.WithHeaders, middleware.MaxBodyLength(maxBodySize))
-	r.Use(middleware.MaxBodyLength(maxBodySize))
+	r.Use(middleware.MaxBodyLength(maxBodySize), middleware.Logger(logger))
 	r.Mount("/", s.basicRouters())
 
 	r.Mount("/chat", s.chatRouters())
