@@ -29,3 +29,9 @@ type bodyPredict struct {
 type respPredict struct {
 	EventID string `json:"event_id"`
 }
+
+type respJWT struct {
+	Token       string `json:"token"`
+	AccessToken string `json:"accessToken"`
+	Expire      int64  `json:"exp"`
+}
