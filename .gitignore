@@ -1,3 +1,9 @@
+#backend
 backend/config/config.yaml
 backend/build/*
 *.db
+
+#frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
