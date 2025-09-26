@@ -7,7 +7,7 @@ import (
 
 // Select latest messages from a session based on the token limit.
 // the input session should contain the latest user input, in order to make the calculated tokens contains the latest user input.
-func SelectMessage(session storage.Session, tokenLimit int, model Model) ([]storage.Message, error) {
+func SelectMessage(session SessionsWithMessages, tokenLimit int, model Model) ([]storage.Message, error) {
 	var selectedMessages []storage.Message
 	// return selectedMessages, nil
 
