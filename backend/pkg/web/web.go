@@ -19,11 +19,13 @@ type Server struct {
 	http   *http.Server
 	logger *zerolog.Logger
 	db     *storage.Storage
+
+	hfToken string
 }
 
 const maxBodySize = 10 * 1024 * 1024
 
-func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Logger) (*Server, error) {
+func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Logger, hfToken string) (*Server, error) {
 	if db == nil {
 		return nil, ErrInvalidStorage
 	}
@@ -36,6 +38,8 @@ func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Log
 		http:   &http.Server{Addr: ":" + strconv.Itoa(port)},
 		logger: logger,
 		db:     db,
+
+		hfToken: hfToken,
 	}
 
 	r := chi.NewRouter()
