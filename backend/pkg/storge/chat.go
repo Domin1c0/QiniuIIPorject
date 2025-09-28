@@ -58,7 +58,7 @@ func (db *Storage) GetSessionsByUserID(userID int, num int, from ...time.Time) (
 	q := db.engine.Where("user_id = ?", userID).Desc("update_at")
 
 	if len(from) > 0 {
-		q = q.Where("update_at >= ?", from[0])
+		q = q.Where("update_at <= ?", from[0])
 	}
 
 	if num > 0 {
