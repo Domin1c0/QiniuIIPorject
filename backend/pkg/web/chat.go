@@ -38,7 +38,7 @@ func (s *Server) getSessions(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	urlFrom := r.URL.Query().Get("from")
-	from := time.Time{}
+	from := time.Now()
 	if urlFrom != "" {
 		if ts, err := strconv.ParseInt(urlFrom, 10, 64); err == nil {
 			from = time.Unix(ts, 0)
