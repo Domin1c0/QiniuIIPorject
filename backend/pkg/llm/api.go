@@ -51,7 +51,7 @@ func CallLLM(model Model, messages []storage.Message) (storage.Message, error) {
 
 	res.Role = "assistant"
 	res.Content = chatCompletion.Choices[0].Message.Content
-	res.CreateAt = time.Unix(chatCompletion.Created, 0)
+	res.CreateAt = time.Now()
 	return res, nil
 	// return chatCompletion.Choices[0].Message.Content, nil
 

@@ -7,12 +7,24 @@ import (
 
 // Select latest messages from a session based on the token limit.
 // the input session should contain the latest user input, in order to make the calculated tokens contains the latest user input.
-func SelectMessage(session storage.Session, tokenLimit int, model Model) ([]storage.Message, error) {
+func SelectMessage(session storage.SessionWithMessages, tokenLimit int, model Model) ([]storage.Message, error) {
 	var selectedMessages []storage.Message
 	// return selectedMessages, nil
 
 	sumToken := 0
-	// for message := range session.Messages
+
+	// always have the system message if exists
+	for _, msg := range session.Messages {
+		if msg.Role == "system" {
+			token, err := GetStringToken(msg.Content, model)
+			if err != nil {
+				return nil, err
+			}
+			sumToken += token
+			break
+		}
+	}
+
 	for i := len(session.Messages) - 1; i >= 0; i-- {
 		msg := session.Messages[i]
 		token, err := GetStringToken(msg.Content, model)

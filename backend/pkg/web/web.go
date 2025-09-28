@@ -6,7 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/LTSlw/QiniuIIPorject/backend/pkg/llm"
 	storage "github.com/LTSlw/QiniuIIPorject/backend/pkg/storge"
+	"github.com/LTSlw/QiniuIIPorject/backend/pkg/web/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -15,15 +17,16 @@ import (
 var ErrInvalidStorage = errors.New("invalid storage")
 
 type Server struct {
-	domain string
-	http   *http.Server
-	logger *zerolog.Logger
-	db     *storage.Storage
+	domain   string
+	http     *http.Server
+	logger   *zerolog.Logger
+	db       *storage.Storage
+	llmModel llm.Model
 }
 
 const maxBodySize = 10 * 1024 * 1024
 
-func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Logger) (*Server, error) {
+func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Logger, llmModel llm.Model) (*Server, error) {
 	if db == nil {
 		return nil, ErrInvalidStorage
 	}
@@ -32,19 +35,20 @@ func NewServer(domain string, port int, db *storage.Storage, logger *zerolog.Log
 	}
 
 	s := &Server{
-		domain: domain,
-		http:   &http.Server{Addr: ":" + strconv.Itoa(port)},
-		logger: logger,
-		db:     db,
+		domain:   domain,
+		http:     &http.Server{Addr: ":" + strconv.Itoa(port)},
+		logger:   logger,
+		db:       db,
+		llmModel: llmModel,
 	}
 
 	r := chi.NewRouter()
 	// // TODO: replave with cors.Handler
 	// r.Use(middleware.Logger(logger), middleware.WithHeaders, middleware.MaxBodyLength(maxBodySize))
-	// r.Mount("/_matrix", s.matrixRouters())
-	// r.Mount("/_hotaru", s.hotaruRouters())
+	r.Use(middleware.MaxBodyLength(maxBodySize), middleware.Logger(logger))
 	r.Mount("/", s.basicRouters())
 
+	r.Mount("/chat", s.chatRouters())
 	s.http.Handler = r
 
 	return s, nil

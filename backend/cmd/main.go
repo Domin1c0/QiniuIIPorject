@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/LTSlw/QiniuIIPorject/backend/pkg/llm"
 	storage "github.com/LTSlw/QiniuIIPorject/backend/pkg/storge"
 	"github.com/LTSlw/QiniuIIPorject/backend/pkg/web"
 	"github.com/rs/zerolog/log"
@@ -54,7 +55,12 @@ func main() {
 	}
 
 	// serve http
-	server, err := web.NewServer(config.Domain, config.Port, database, ptr(log.With().Str("comp", "web").Logger()))
+	server, err := web.NewServer(config.Domain, config.Port, database, ptr(log.With().Str("comp", "web").Logger()), llm.Model{
+		ModelName: config.LLMModel.ModelName,
+		Addr:      config.LLMModel.Addr,
+		ApiKey:    config.LLMModel.ApiKey,
+		MaxToken:  config.LLMModel.MaxToken,
+	})
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to create web server")
 	}

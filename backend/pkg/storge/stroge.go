@@ -28,7 +28,7 @@ func NewStorage(engineType, engineUrl string, logger *zerolog.Logger) (*Storage,
 	}
 
 	// sync db
-	if err := eng.Sync(&User{}, &Session{}, &Message{}); err != nil {
+	if err := eng.Sync(&User{}, &UserSession{}, &Session{}, &Message{}); err != nil {
 		return nil, err
 	}
 
@@ -46,7 +46,7 @@ func parseDriverName(engineType string) string {
 }
 
 func (db *Storage) Init() error {
-	if err := db.engine.Sync(&User{}, &Session{}, &Message{}); err != nil {
+	if err := db.engine.Sync(&User{}, &UserSession{}, &Session{}, &Message{}); err != nil {
 		return err
 	}
 	// TODO foreign key
