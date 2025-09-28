@@ -24,6 +24,14 @@ type Config struct {
 	Port     int            `yaml:"port"`
 	Log      ConfigLog      `yaml:"log"`
 	Database ConfigDatabase `yaml:"database"`
+	LLMModel ConfigLLMModel `yaml:"llm_model"`
+}
+
+type ConfigLLMModel struct {
+	ModelName string `yaml:"model_name"`
+	Addr      string `yaml:"addr"`
+	ApiKey    string `yaml:"api_key"`
+	MaxToken  int    `yaml:"max_token"`
 }
 
 type ConfigLog struct {
