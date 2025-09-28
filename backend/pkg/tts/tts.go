@@ -13,9 +13,9 @@ func TTS(text string, character string, hfToken string) ([]byte, error) {
 	client.AppendInt(1)
 	client.AppendString(text)
 	client.AppendString(character)
-	client.AppendString(character)
-	client.AppendString(character)
-	client.AppendString(character)
+	client.AppendString(character) // upstream api definition
+	client.AppendString(character) // upstream api definition
+	client.AppendString(character) // upstream api definition
 	client.AppendFloat(1.3)
 
 	_, err := client.Predict("generate_podcast_wrapper")
